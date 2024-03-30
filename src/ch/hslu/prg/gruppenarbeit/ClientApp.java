@@ -1,5 +1,6 @@
 package ch.hslu.prg.gruppenarbeit;
 
+import java.util.Random;
 import java.util.Scanner;
 
 import ch.hslu.prg.ledboard.proxy.BoardService;
@@ -109,10 +110,10 @@ public class ClientApp {
 		// 2.2
 		// Zwei Sekunden anhlten
 		board.pauseExecution(2000);
-		
+
 		// zwei Dimensionales LED Array
 		Led leds[][] = board.getAllLeds();
-		
+
 		// 2.7
 		// Schritte 3 bis 6 drei mal wiederholen
 		for (int x = 0; x < 3; x++) {
@@ -149,18 +150,15 @@ public class ClientApp {
 			// Eine Sekunden anhlten
 			board.pauseExecution(1000);
 		}
-		
-		
-		//2.8
+
+		// 2.8
 		// Alle leds aussschalten
 		for (int i = 0; i < 32; i++) {
 			for (int y = 0; y < reihen; y++) {
-					leds[y][i].turnOff();
+				leds[y][i].turnOff();
 			}
 		}
-		
-		
-		
+
 		// 2.9
 		// Zwei Sekunden anhlten
 		board.pauseExecution(2000);
@@ -171,12 +169,82 @@ public class ClientApp {
 
 	}
 
+	public static void switchRandom(BoardService board) {
+		// Scanner erstellen
+		Scanner sc = new Scanner(System.in);
+
+		// 3.1
+		int reihen = 0;
+		do {
+			System.out.println("Anzahl LED Reihen eingeben (1 zwischen 32): ");
+			reihen = sc.nextInt();
+		} while (reihen > board.MAX_ROWS || reihen <= 0);
+
+		// 3.2
+		// zufällige Farbauswahl
+		LedColor colorLed = null;
+		Random r = new Random();
+
+		// generiert Int zwischen 1 und 5
+		int wahl = r.nextInt(5) + 1;
+
+		switch (wahl) {
+		case 1:
+			colorLed = LedColor.RED;
+			break;
+		case 2:
+			colorLed = LedColor.GREEN;
+			break;
+		case 3:
+			colorLed = LedColor.YELLOW;
+			break;
+		case 4:
+			colorLed = LedColor.BLUE;
+			break;
+		case 5:
+			colorLed = LedColor.RANDOM;
+			break;
+		default:
+			colorLed = LedColor.RED;
+		}
+
+		// 1.1.2
+		// LED Reihen dem Board hinzufuegen
+		board.add(reihen, colorLed);
+
+		// 3.3
+		// Zwei Sekunden anhlten
+		board.pauseExecution(2000);
+
+		// 3.4
+		// zufällige Hälfte der LEDs einschalten
+
+		// zwei Dimensionales LED Array
+		Led leds[][] = board.getAllLeds();
+
+		int sumLeds = 32 * reihen;
+		int countDown = sumLeds / 2;
+
+		do {
+			int y = r.nextInt(reihen);
+			int i = r.nextInt(32);
+			if (!leds[y][i].isOn()) {
+				countDown--;
+				leds[y][i].turnOn();
+			}
+		} while (countDown != 0);
+		
+		
+
+	}
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		BoardService board = new BoardService();
 
-		ledsOnOff(board);
-		switchEvenOdd(board);
+		// ledsOnOff(board);
+		// switchEvenOdd(board);
+		switchRandom(board);
 
 	}
 
