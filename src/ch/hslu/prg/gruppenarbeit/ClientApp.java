@@ -24,8 +24,7 @@ public class ClientApp {
 		LedColor colorLed = null;
 		System.out.println("LED Farbe waehlen: \n 1: Rot \n 2: Gruen \n 3: Gelb \n 4: Blau \n 5: Random");
 		int wahl = sc.nextInt();
-		
-		
+
 		switch (wahl) {
 		case 1:
 			colorLed = LedColor.RED;
@@ -55,7 +54,7 @@ public class ClientApp {
 		board.pauseExecution(2000);
 
 		// 1.1.8
-		// Schritte 4 bis 7 drei mal wiederholen 
+		// Schritte 4 bis 7 drei mal wiederholen
 		for (int x = 0; x < 3; x++) {
 			// 1.1.4
 			// Alle LEDs von rechts nach Links einschalten
@@ -93,11 +92,91 @@ public class ClientApp {
 
 	}
 
+	public static void switchEvenOdd(BoardService board) {
+		// Scanner erstellen
+		Scanner sc = new Scanner(System.in);
+
+		// 2.1
+		int reihen = 0;
+		do {
+			System.out.println("Anzahl LED Reihen eingeben (1 zwischen 32): ");
+			reihen = sc.nextInt();
+		} while (reihen > board.MAX_ROWS || reihen <= 0);
+
+		// LED Reihen dem Board hinzufuegen
+		board.add(reihen);
+
+		// 2.2
+		// Zwei Sekunden anhlten
+		board.pauseExecution(2000);
+		
+		// zwei Dimensionales LED Array
+		Led leds[][] = board.getAllLeds();
+		
+		// 2.7
+		// Schritte 3 bis 6 drei mal wiederholen
+		for (int x = 0; x < 3; x++) {
+			// 2.3
+			// Alle geraden LEDs einschalten
+
+			// Alle LEDs von links nach rechts
+			for (int i = 0; i < 32; i++) {
+				for (int y = 0; y < reihen; y++) {
+					// wenn gerade (restlos durch 2 teilbar)
+					if (leds[y][i].getLedId() % 2 == 0) {
+						leds[y][i].turnOn();
+					}
+				}
+			}
+
+			// 2.4
+			// Eine Sekunden anhlten
+			board.pauseExecution(1000);
+
+			// 2.5
+			for (int i = 0; i < 32; i++) {
+				for (int y = 0; y < reihen; y++) {
+					// wenn angeschaltet dann ausschalten sonst anschalten
+					if (leds[y][i].isOn()) {
+						leds[y][i].turnOff();
+					} else {
+						leds[y][i].turnOn();
+					}
+				}
+			}
+
+			// 2.6
+			// Eine Sekunden anhlten
+			board.pauseExecution(1000);
+		}
+		
+		
+		//2.8
+		// Alle leds aussschalten
+		for (int i = 0; i < 32; i++) {
+			for (int y = 0; y < reihen; y++) {
+					leds[y][i].turnOff();
+			}
+		}
+		
+		
+		
+		// 2.9
+		// Zwei Sekunden anhlten
+		board.pauseExecution(2000);
+
+		// 2.10
+		// Board zurücksetzen
+		board.removeAllLeds();
+
+	}
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		BoardService board = new BoardService();
 
 		ledsOnOff(board);
+		switchEvenOdd(board);
 
 	}
 
