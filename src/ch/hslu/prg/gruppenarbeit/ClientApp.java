@@ -9,6 +9,7 @@ import ch.hslu.prg.ledboard.proxy.LedColor;
 public class ClientApp {
 
 	public static void ledsOnOff(BoardService board) {
+		// Scanner erstellen
 		Scanner sc = new Scanner(System.in);
 
 		// 1.1.1
@@ -54,7 +55,7 @@ public class ClientApp {
 		board.pauseExecution(2000);
 
 		// 1.1.8
-		// Schritte 4 bis 7 drei mal wiederholen
+		// Schritte 4 bis 7 drei mal wiederholen 
 		for (int x = 0; x < 3; x++) {
 			// 1.1.4
 			// Alle LEDs von rechts nach Links einschalten
