@@ -233,8 +233,38 @@ public class ClientApp {
 				leds[y][i].turnOn();
 			}
 		} while (countDown != 0);
-		
-		
+
+		// 3.5
+		// Zwei Sekunden anhlten
+		board.pauseExecution(2000);
+
+		// 3.8
+		// Fünf mal wiederholen
+		for (int t = 0; t < 5; t++) {
+
+			// 3.6
+			// Alle eingeschalteten LEDs ausschalten alle ausgeschalteten einschalten
+			for (int i = 0; i < 32; i++) {
+				for (int y = 0; y < reihen; y++) {
+					if (leds[y][i].isOn()) {
+						leds[y][i].turnOff();
+					} else {
+						leds[y][i].turnOn();
+					}
+				}
+			}
+			// 3.7
+			// Halbe Sekunde anhlaten
+			board.pauseExecution(500);
+
+		}
+		// 3.9
+		// Zwei Sekunden anhlaten
+		board.pauseExecution(2000);
+
+		// 3.10
+		// Board zurücksetzen
+		board.removeAllLeds();
 
 	}
 
