@@ -268,13 +268,82 @@ public class ClientApp {
 
 	}
 
+	public static void showBinary(BoardService board) {
+		// Scanner erstellen
+		Scanner sc = new Scanner(System.in);
+		
+		// 4.1
+		// int Zahl in dezimaler Form einlesen
+		int zahl = 0;
+		System.out.println("Bitte eine Ganzzahl eingeben: ");
+		zahl = sc.nextInt();
+		
+		// 4.2
+		// Eingelesene ganze Zahl als Binaerzahl umwandeln
+		String binaryString = Integer.toBinaryString(zahl);
+		
+		// LED Reihen und Farbe definieren
+		int reihen = 1;
+		LedColor colorLed = LedColor.RED;
+		
+		// 4.3
+		// LED Reihe dem Board hinzufügen
+		board.add(reihen, colorLed);
+		
+		// 4.4
+		// Einschalten der LED's
+		Led leds[][] = board.getAllLeds();
+		for (int i = 31; i >= binaryString.length(); i--) {
+			if (binaryString.charAt(i)== '1') {
+					leds[0][i].turnOn();
+			}
+		}
+		
+	}
+	
+	public static void showBorder(BoardService board) {
+		
+		// Maximale Anzahl von LED Reihen
+		Led[][] leds = board.add(BoardService.MAX_ROWS);
+		
+		// Board für 2 Sekunden anhalten
+		board.pauseExecution(2000);
+		
+		// Alle LED's am Rande einschalten
+		for (int row = 0; row < BoardService.MAX_ROWS; row++) {
+			for(int col = 0; col < BoardService.LEDS_PER_ROW; col++) {
+				if (row == 0 || row == BoardService.MAX_ROWS - 1 || col == 0 || col == BoardService.LEDS_PER_ROW - 1) {
+                    leds[row][col].turnOn();
+				}
+			}
+		}
+		
+		// Board für 2 Sekunden anhalten
+		board.pauseExecution(2000);
+		
+		// LED's am Rande ausschalten
+		for (int row = 0; row < BoardService.MAX_ROWS; row++) {
+			for (int col = 0; col < BoardService.LEDS_PER_ROW; col++) {
+				if (row == 0 || row == BoardService.MAX_ROWS - 1 || col == 0 || col == BoardService.LEDS_PER_ROW - 1) {
+					leds[row][col].turnOff();
+				}
+			}
+		}
+		
+		// Board zurücksetzen
+		board.removeAllLeds();
+	}
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		BoardService board = new BoardService();
 
 		// ledsOnOff(board);
 		// switchEvenOdd(board);
-		switchRandom(board);
+		// switchRandom(board);
+		// showBinary(board);
+		// showBorder(board);
+
 
 	}
 
