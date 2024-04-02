@@ -271,59 +271,59 @@ public class ClientApp {
 	public static void showBinary(BoardService board) {
 		// Scanner erstellen
 		Scanner sc = new Scanner(System.in);
-		
+
 		// 4.1
 		// int Zahl in dezimaler Form einlesen
 		int zahl = 0;
 		System.out.println("Bitte eine Ganzzahl eingeben: ");
 		zahl = sc.nextInt();
-		
+
 		// 4.2
 		// Eingelesene ganze Zahl als Binaerzahl umwandeln
 		String binaryString = Integer.toBinaryString(zahl);
-		
+
 		// LED Reihen und Farbe definieren
 		int reihen = 1;
 		LedColor colorLed = LedColor.RED;
-		
+
 		// 4.3
 		// LED Reihe dem Board hinzufügen
 		board.add(reihen, colorLed);
-		
+
 		// 4.4
 		Led leds[][] = board.getAllLeds();
 		// LED Postionsvariable
 		int pl = 31;
 		// Einschalten der LED's
-		for (int i = binaryString.length()-1; i >= 0; i--) {
-			if (binaryString.charAt(i)== '1') {
-					leds[0][pl].turnOn();
+		for (int i = binaryString.length() - 1; i >= 0; i--) {
+			if (binaryString.charAt(i) == '1') {
+				leds[0][pl].turnOn();
 			}
 			pl--;
 		}
-		
+
 	}
-	
+
 	public static void showBorder(BoardService board) {
-		
+
 		// Maximale Anzahl von LED Reihen
 		Led[][] leds = board.add(BoardService.MAX_ROWS);
-		
+
 		// Board für 2 Sekunden anhalten
 		board.pauseExecution(2000);
-		
+
 		// Alle LED's am Rande einschalten
 		for (int row = 0; row < BoardService.MAX_ROWS; row++) {
-			for(int col = 0; col < BoardService.LEDS_PER_ROW; col++) {
+			for (int col = 0; col < BoardService.LEDS_PER_ROW; col++) {
 				if (row == 0 || row == BoardService.MAX_ROWS - 1 || col == 0 || col == BoardService.LEDS_PER_ROW - 1) {
-                    leds[row][col].turnOn();
+					leds[row][col].turnOn();
 				}
 			}
 		}
-		
+
 		// Board für 2 Sekunden anhalten
 		board.pauseExecution(2000);
-		
+
 		// LED's am Rande ausschalten
 		for (int row = 0; row < BoardService.MAX_ROWS; row++) {
 			for (int col = 0; col < BoardService.LEDS_PER_ROW; col++) {
@@ -332,13 +332,97 @@ public class ClientApp {
 				}
 			}
 		}
-		
+
 		// Board zurücksetzen
 		board.removeAllLeds();
 	}
 
+	// 6
+	public static void showSquare(BoardService board) {
+
+		// Scanner erstellen
+		Scanner sc = new Scanner(System.in);
+
+		// 6.1
+		// Maximale Anzahl von LED Reihen
+		Led[][] leds = board.add(BoardService.MAX_ROWS);
+
+		// Koordinaten in dezimaler Form einlesen
+		int reihe = 0;
+		int spalte = 0;
+		System.out.print("Bitte eine Ganzzahl fuer die Reihe eingeben: ");
+		reihe = sc.nextInt();
+		reihe--;
+		System.out.print("Bitte eine Ganzzahl fuer die Spalte eingeben: ");
+		spalte = sc.nextInt();
+		spalte--;
+
+		// Darstellen des topleft Punkts
+		leds[reihe][spalte].turnOn();
+
+		// Seitenlaenge des Quadrates einlesen unter der Bedingung, dass es ins Feld
+		// passt
+		int seitenlaenge = 0;
+		do {
+			System.out.println("Bitte eine Ganzzahl fuer die Seitenlaenge eingeben: ");
+			seitenlaenge = sc.nextInt();
+			if (seitenlaenge + reihe > BoardService.MAX_ROWS || seitenlaenge + spalte > BoardService.LEDS_PER_ROW) {
+				System.out.println("Bitte die maximale Hoehe und Breite des Quadreates beachten!");
+			}
+		} while (seitenlaenge + reihe > BoardService.MAX_ROWS || seitenlaenge + spalte > BoardService.LEDS_PER_ROW);
+		seitenlaenge--;
+
+		// Alle LED's am Quadratrande einschalten
+		for (int row = reihe; row <= seitenlaenge + reihe; row++) {
+			for (int col = spalte; col <= seitenlaenge + spalte; col++) {
+				if (row == reihe || row == seitenlaenge + reihe || col == spalte || col == seitenlaenge + spalte) {
+					leds[row][col].turnOn();
+				}
+			}
+		}
+
+		// 6.2
+		// Abfrage, ob Diagonale gezeichnet werden soll
+		boolean diagonaleLinksNachRechtsAktiv = false;
+		boolean diagonaleRechtsNachLinksAktiv = false;
+		System.out.print("Sollen die Diagonalen des Quadrates von links nach rechts auch gezeichnet werden? (true/false): ");
+		diagonaleLinksNachRechtsAktiv = sc.nextBoolean();
+		System.out.print("Sollen die Diagonalen des Quadrates von rechts nach links auch gezeichnet werden? (true/false): ");
+		diagonaleRechtsNachLinksAktiv = sc.nextBoolean();
+
+		// Aufruf der Methode zum Zeichnen der Diagonalen
+		if (diagonaleLinksNachRechtsAktiv || diagonaleRechtsNachLinksAktiv) {
+			drawDiagonalOfSquare(diagonaleLinksNachRechtsAktiv, diagonaleRechtsNachLinksAktiv, reihe, spalte,seitenlaenge, leds);
+		}
+
+	}
+
+	// 6.2
+	public static void drawDiagonalOfSquare(boolean linksRechts, boolean rechtsLinks, int topLeftReihe,int topLeftSpalte, int seitenlaenge, Led[][] leds) {
+		// Diagonale des Quadrates von links nach rechts zeichnen
+		if (linksRechts) {
+			int versatzCounter = 0;
+			for (int row = topLeftReihe; row < seitenlaenge + topLeftReihe; row++) {
+				for (int col = topLeftSpalte; col < 1 + topLeftSpalte; col++) {
+					leds[row][col + versatzCounter].turnOn();
+				}
+				versatzCounter++;
+			}
+		}
+		
+		// Diagonale des Quadrates von rechts nach links zeichnen
+		if (rechtsLinks) {
+			int versatzCounter = seitenlaenge;
+			for (int row = topLeftReihe; row < seitenlaenge + topLeftReihe; row++) {
+				for (int col = topLeftSpalte; col < 1 + topLeftSpalte; col++) {
+					leds[row][col + versatzCounter].turnOn();
+				}
+				versatzCounter--;
+			}
+		}
+	}
+
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		BoardService board = new BoardService();
 
 		// ledsOnOff(board);
@@ -346,7 +430,7 @@ public class ClientApp {
 		// switchRandom(board);
 		// showBinary(board);
 		// showBorder(board);
-
+		// showSquare(board);
 
 	}
 
