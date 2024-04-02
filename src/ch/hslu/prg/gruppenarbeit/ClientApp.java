@@ -291,12 +291,15 @@ public class ClientApp {
 		board.add(reihen, colorLed);
 		
 		// 4.4
-		// Einschalten der LED's
 		Led leds[][] = board.getAllLeds();
-		for (int i = 31; i >= binaryString.length(); i--) {
+		// LED Postionsvariable
+		int pl = 31;
+		// Einschalten der LED's
+		for (int i = binaryString.length()-1; i >= 0; i--) {
 			if (binaryString.charAt(i)== '1') {
-					leds[0][i].turnOn();
+					leds[0][pl].turnOn();
 			}
+			pl--;
 		}
 		
 	}
