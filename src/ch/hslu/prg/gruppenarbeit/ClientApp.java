@@ -304,6 +304,7 @@ public class ClientApp {
 
 	}
 
+	// 5
 	public static void showBorder(BoardService board) {
 
 		// Maximale Anzahl von LED Reihen
@@ -420,6 +421,90 @@ public class ClientApp {
 				versatzCounter--;
 			}
 		}
+		
+	}
+	
+	// 7
+	public static void showRectangle(BoardService board) {
+		// Scanner erstellen
+		Scanner sc = new Scanner(System.in);
+		
+		// 7.1 Maximale Anzahl Reihen hinzufügen
+		board.add(board.MAX_ROWS);
+		
+		int topleftX = 0;
+		int topleftY = 0;
+		int bottomRightX = 0;
+		int bottomRightY = 0;
+		
+		
+		
+		do {
+			System.out.println("Das Rechtecks muss mindestens 3 mal 3 LEDs gross sein");
+			System.out.println("Top Left X Koordinate des Rechtecks eingeben: \n X: ");
+			topleftX = sc.nextInt();
+			System.out.println("Top Left Y Koordinate des Rechtecks eingeben: \n Y: ");
+			topleftY = sc.nextInt();
+			
+			System.out.println("Bottom Right X Koordinate des Rechtecks eingeben: \n X: ");
+			bottomRightX = sc.nextInt();
+			System.out.println("Bottom Right Y Koordinate des Rechtecks eingeben: \n Y: ");
+			bottomRightY = sc.nextInt();
+
+		} while ((bottomRightX-topleftX) < 2 || (bottomRightY-topleftY) < 2 );
+		
+		
+
+		// zwei Dimensionales LED Array
+		Led leds[][] = board.getAllLeds();
+		
+		//leds[topleftX][topleftY].turnOn();
+		//leds[bottomRightX][bottomRightY].turnOn();
+		
+		// Alle LEDs von links nach rechts
+		for (int x = topleftX; x <= bottomRightX; x++) {
+			for (int y = topleftY; y <= bottomRightY; y++) {
+				//LED einschalten
+				leds[x][y].turnOn();
+				
+			}
+		}
+		
+		// Drei Sekunden anhlten
+		board.pauseExecution(3000);
+		
+		//LEDs im inneren des Rechtecks aussschalten
+		for (int x = (topleftX+1); x <= (bottomRightX-1); x++) {
+			for (int y = (topleftY+1); y <= (bottomRightY-1); y++) {
+				//LED einschalten
+				leds[x][y].turnOff();
+				
+			}
+		}
+		
+		// Drei Sekunden anhlten
+		board.pauseExecution(3000);
+		
+		//LEDS die angeschaltet sind zu Blauen LEDs machen
+		// Alle LEDs von links nach rechts
+		for (int x = topleftX; x <= bottomRightX; x++) {
+			for (int y = topleftY; y <= bottomRightY; y++) {
+				// Alle eingeschalteten und somit nur der Rahmen wird durch blaue LEDs ersetzt
+				if(leds[x][y].isOn()){
+					LedColor colorLed = LedColor.BLUE;
+					board.replace(leds[x][y], colorLed);
+					leds[x][y].turnOn();
+				}
+			}
+		}
+		
+		// Drei Sekunden anhlten
+		board.pauseExecution(3000);
+		
+		// Board zurücksetzen
+		board.removeAllLeds();
+		
+		
 	}
 
 	public static void main(String[] args) {
@@ -431,7 +516,10 @@ public class ClientApp {
 		// showBinary(board);
 		// showBorder(board);
 		// showSquare(board);
+		//showRectangle(board);
 
 	}
+
+
 
 }
