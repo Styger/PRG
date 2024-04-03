@@ -506,6 +506,45 @@ public class ClientApp {
 		
 		
 	}
+	
+	public static void showTriangle(BoardService board) {
+		// Scanner erstellen
+		Scanner sc = new Scanner(System.in);
+		
+
+		
+		int triangleHight = 0;
+
+		
+		do {
+			System.out.println("Hoehe des Dreiecks eingegen mindestens 2, maximal 16");
+			System.out.print(" Hoehe: ");
+			triangleHight = sc.nextInt();
+
+
+		} while (triangleHight < 2 || triangleHight > board.MAX_ROWS/2 );
+
+
+		//Anzahl Reihen gemaess Hoehe hinzufügen
+		board.add(triangleHight);
+		
+		// Gleichschenkliges Dreieck zeichnen
+		// Alle LEDs von rechts nach Links einschalten
+		Led leds[][] = board.getAllLeds();
+		
+		// Alle LEDs von von oben nach unten
+		int baseLine =(triangleHight-1); 
+		for (int y = 0; y < triangleHight; y++) {
+			for (int x = 0; x < 32; x++) {
+				//Das Dreieck zeichnen
+				if(x >= (baseLine-y)&& x <= (baseLine+y)) {
+					leds[y][x].turnOn();
+				}
+
+			}
+		}
+		
+	}
 
 	public static void main(String[] args) {
 		BoardService board = new BoardService();
@@ -516,7 +555,8 @@ public class ClientApp {
 		// showBinary(board);
 		// showBorder(board);
 		// showSquare(board);
-		//showRectangle(board);
+		// showRectangle(board);
+		showTriangle(board);
 
 	}
 
