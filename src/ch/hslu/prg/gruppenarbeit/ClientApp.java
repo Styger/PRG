@@ -386,20 +386,24 @@ public class ClientApp {
 		// Abfrage, ob Diagonale gezeichnet werden soll
 		boolean diagonaleLinksNachRechtsAktiv = false;
 		boolean diagonaleRechtsNachLinksAktiv = false;
-		System.out.print("Sollen die Diagonalen des Quadrates von links nach rechts auch gezeichnet werden? (true/false): ");
+		System.out.print(
+				"Sollen die Diagonalen des Quadrates von links nach rechts auch gezeichnet werden? (true/false): ");
 		diagonaleLinksNachRechtsAktiv = sc.nextBoolean();
-		System.out.print("Sollen die Diagonalen des Quadrates von rechts nach links auch gezeichnet werden? (true/false): ");
+		System.out.print(
+				"Sollen die Diagonalen des Quadrates von rechts nach links auch gezeichnet werden? (true/false): ");
 		diagonaleRechtsNachLinksAktiv = sc.nextBoolean();
 
 		// Aufruf der Methode zum Zeichnen der Diagonalen
 		if (diagonaleLinksNachRechtsAktiv || diagonaleRechtsNachLinksAktiv) {
-			drawDiagonalOfSquare(diagonaleLinksNachRechtsAktiv, diagonaleRechtsNachLinksAktiv, reihe, spalte,seitenlaenge, leds);
+			drawDiagonalOfSquare(diagonaleLinksNachRechtsAktiv, diagonaleRechtsNachLinksAktiv, reihe, spalte,
+					seitenlaenge, leds);
 		}
 
 	}
 
 	// 6.2
-	public static void drawDiagonalOfSquare(boolean linksRechts, boolean rechtsLinks, int topLeftReihe,int topLeftSpalte, int seitenlaenge, Led[][] leds) {
+	public static void drawDiagonalOfSquare(boolean linksRechts, boolean rechtsLinks, int topLeftReihe,
+			int topLeftSpalte, int seitenlaenge, Led[][] leds) {
 		// Diagonale des Quadrates von links nach rechts zeichnen
 		if (linksRechts) {
 			int versatzCounter = 0;
@@ -410,7 +414,7 @@ public class ClientApp {
 				versatzCounter++;
 			}
 		}
-		
+
 		// Diagonale des Quadrates von rechts nach links zeichnen
 		if (rechtsLinks) {
 			int versatzCounter = seitenlaenge;
@@ -421,130 +425,182 @@ public class ClientApp {
 				versatzCounter--;
 			}
 		}
-		
+
 	}
-	
+
 	// 7
 	public static void showRectangle(BoardService board) {
 		// Scanner erstellen
 		Scanner sc = new Scanner(System.in);
-		
+
 		// 7.1 Maximale Anzahl Reihen hinzufügen
 		board.add(board.MAX_ROWS);
-		
+
 		int topleftX = 0;
 		int topleftY = 0;
 		int bottomRightX = 0;
 		int bottomRightY = 0;
-		
-		
-		
+
 		do {
 			System.out.println("Das Rechtecks muss mindestens 3 mal 3 LEDs gross sein");
 			System.out.println("Top Left X Koordinate des Rechtecks eingeben: \n X: ");
 			topleftX = sc.nextInt();
 			System.out.println("Top Left Y Koordinate des Rechtecks eingeben: \n Y: ");
 			topleftY = sc.nextInt();
-			
+
 			System.out.println("Bottom Right X Koordinate des Rechtecks eingeben: \n X: ");
 			bottomRightX = sc.nextInt();
 			System.out.println("Bottom Right Y Koordinate des Rechtecks eingeben: \n Y: ");
 			bottomRightY = sc.nextInt();
 
-		} while ((bottomRightX-topleftX) < 2 || (bottomRightY-topleftY) < 2 );
-		
-		
+		} while ((bottomRightX - topleftX) < 2 || (bottomRightY - topleftY) < 2);
 
 		// zwei Dimensionales LED Array
 		Led leds[][] = board.getAllLeds();
-		
-		//leds[topleftX][topleftY].turnOn();
-		//leds[bottomRightX][bottomRightY].turnOn();
-		
+
+		// leds[topleftX][topleftY].turnOn();
+		// leds[bottomRightX][bottomRightY].turnOn();
+
 		// Alle LEDs von links nach rechts
 		for (int x = topleftX; x <= bottomRightX; x++) {
 			for (int y = topleftY; y <= bottomRightY; y++) {
-				//LED einschalten
+				// LED einschalten
 				leds[x][y].turnOn();
-				
+
 			}
 		}
-		
+
 		// Drei Sekunden anhlten
 		board.pauseExecution(3000);
-		
-		//LEDs im inneren des Rechtecks aussschalten
-		for (int x = (topleftX+1); x <= (bottomRightX-1); x++) {
-			for (int y = (topleftY+1); y <= (bottomRightY-1); y++) {
-				//LED einschalten
+
+		// LEDs im inneren des Rechtecks aussschalten
+		for (int x = (topleftX + 1); x <= (bottomRightX - 1); x++) {
+			for (int y = (topleftY + 1); y <= (bottomRightY - 1); y++) {
+				// LED einschalten
 				leds[x][y].turnOff();
-				
+
 			}
 		}
-		
+
 		// Drei Sekunden anhlten
 		board.pauseExecution(3000);
-		
-		//LEDS die angeschaltet sind zu Blauen LEDs machen
+
+		// LEDS die angeschaltet sind zu Blauen LEDs machen
 		// Alle LEDs von links nach rechts
 		for (int x = topleftX; x <= bottomRightX; x++) {
 			for (int y = topleftY; y <= bottomRightY; y++) {
 				// Alle eingeschalteten und somit nur der Rahmen wird durch blaue LEDs ersetzt
-				if(leds[x][y].isOn()){
+				if (leds[x][y].isOn()) {
 					LedColor colorLed = LedColor.BLUE;
 					board.replace(leds[x][y], colorLed);
 					leds[x][y].turnOn();
 				}
 			}
 		}
-		
+
 		// Drei Sekunden anhlten
 		board.pauseExecution(3000);
-		
+
 		// Board zurücksetzen
 		board.removeAllLeds();
-		
-		
+
 	}
-	
+
 	public static void showTriangle(BoardService board) {
 		// Scanner erstellen
 		Scanner sc = new Scanner(System.in);
-		
 
-		
 		int triangleHight = 0;
 
-		
 		do {
 			System.out.println("Hoehe des Dreiecks eingegen mindestens 2, maximal 16");
 			System.out.print(" Hoehe: ");
 			triangleHight = sc.nextInt();
 
+		} while (triangleHight < 2 || triangleHight > board.MAX_ROWS / 2);
 
-		} while (triangleHight < 2 || triangleHight > board.MAX_ROWS/2 );
-
-
-		//Anzahl Reihen gemaess Hoehe hinzufügen
+		// Anzahl Reihen gemaess Hoehe hinzufügen
 		board.add(triangleHight);
-		
+
 		// Gleichschenkliges Dreieck zeichnen
 		// Alle LEDs von rechts nach Links einschalten
 		Led leds[][] = board.getAllLeds();
-		
+
 		// Alle LEDs von von oben nach unten
-		int baseLine =(triangleHight-1); 
+		int halfbaseLine = (triangleHight - 1);
 		for (int y = 0; y < triangleHight; y++) {
 			for (int x = 0; x < 32; x++) {
-				//Das Dreieck zeichnen
-				if(x >= (baseLine-y)&& x <= (baseLine+y)) {
+				// Rand des Dreiecks zeichenen
+				// if((baseLine-y) == x || (baseLine+y) == x) {
+				// leds[y][x].turnOn();
+				// }
+				// Das Dreieck zeichnen
+				if (x >= (halfbaseLine - y) && x <= (halfbaseLine + y)) {
 					leds[y][x].turnOn();
 				}
 
 			}
 		}
-		
+		moveTriangle(board, triangleHight);
+
 	}
+
+	public static void moveTriangle(BoardService board, int rows) {
+
+		int baseLine = (rows - 1) * 2 + 1;
+		Led leds[][] = board.getAllLeds();
+		boolean leftToRight0 = true;
+		boolean leftToRight1 = true;
+		
+		for (int i = 0; i < board.LEDS_PER_ROW - baseLine; i++) {
+
+			for (int y = 0; y < rows; y++) {
+				for (int x = 0; x < board.LEDS_PER_ROW; x++) {
+					if (leftToRight0) {
+						if (x > 0 && leds[y][x - 1].isOn() && !leds[y][x].isOn()) {
+							leds[y][x].turnOn();
+							
+							
+							if(x == board.LEDS_PER_ROW-1 && y == rows-1) {
+								leftToRight0 = false;
+								System.out.println(leftToRight0);
+								x=0;
+							}
+							// naechstes ueberspringen
+							x++;
+							
+						}
+					}
+
+				}
+			}
+
+			for (int y = 0; y < rows; y++) {
+				for (int x = 0; x < board.LEDS_PER_ROW; x++) {
+					if (leftToRight1) {
+						if (leds[y][x].isOn() && x == 0) {
+							leds[y][x].turnOff();
+							// naechstes ueberspringen
+							x++;
+
+						} else if (leds[y][x].isOn() && !leds[y][x - 1].isOn()) {
+							leds[y][x].turnOff();
+							
+							if(x == board.LEDS_PER_ROW-baseLine-1 && y == rows-1) {
+								leftToRight1 = false;
+								System.out.println(leftToRight1);
+							}
+							// naechstes ueberspringen
+							x++;
+							
+						}
+					}
+				}
+			}
+		}
+
+	}
+
 
 	public static void main(String[] args) {
 		BoardService board = new BoardService();
@@ -559,7 +615,5 @@ public class ClientApp {
 		showTriangle(board);
 
 	}
-
-
 
 }
