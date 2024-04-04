@@ -601,6 +601,56 @@ public class ClientApp {
 
 	}
 
+	public static void createRunningLight(BoardService board) {
+		
+	// LED Reihe ohne Farbe explizit angeben dem Board hinzufügen
+	int reihen = 1;
+	board.add(reihen);
+		
+	// Variable für die Zyklen
+		
+	// zwei Dimensionales LED Array
+	Led leds[][] = board.getAllLeds();
+		
+	// Alle LEDs von rechts nach Links einschalten
+	for (int i = 31; i >= 0; i--) {
+		for (int y = (reihen - 1); y >= 0; y--) {
+			leds[y][i].turnOn();
+		}
+	}
+		
+	// LED in 8er Reihen unterteilen von rechts nach links
+	for (int i = 31; i >= 0; i--) {
+		if (i >= 24) {
+			board.replace(leds[0][i], LedColor.GREEN);
+			leds[0][i].turnOn();
+		}else if (i >= 16) {
+			board.replace(leds[0][i], LedColor.RED);
+			leds[0][i].turnOn();
+		}else if (i >= 8) {
+			board.replace(leds[0][i], LedColor.BLUE);
+			leds[0][i].turnOn();
+		}else {
+			board.replace(leds[0][i], LedColor.YELLOW);
+			leds[0][i].turnOn();
+		}
+	}
+		
+		
+	// Der Change der LED's 3 Mal vollständig machen
+	for (int i = 0; i <= 3; i++) {
+		LedColor farbeLetztenLED = leds[0][31].getColor();
+
+		// LEDs Farbe um eine Position nach rechts verschieben
+		for (int p = 1; p < 30; p++) {
+			LedColor aktuelleFarbe = leds[0][p].getColor();
+			board.replace(leds[0][p+1], aktuelleFarbe);
+		}
+			
+		// letzte LED an die erste LED verschieben
+		board.replace(leds[0][0], farbeLetztenLED);
+	}
+}
 
 	public static void main(String[] args) {
 		BoardService board = new BoardService();
@@ -612,7 +662,8 @@ public class ClientApp {
 		// showBorder(board);
 		// showSquare(board);
 		// showRectangle(board);
-		showTriangle(board);
+		// showTriangle(board);
+		createRunningLight(board);
 
 	}
 
