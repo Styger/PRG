@@ -506,7 +506,7 @@ public class ClientApp {
 
 	}
 
-	public static void showTriangle(BoardService board) {
+	public static void showTriangle(BoardService board, int wiederholungen) {
 		// Scanner erstellen
 		Scanner sc = new Scanner(System.in);
 
@@ -541,42 +541,58 @@ public class ClientApp {
 
 			}
 		}
-		moveTriangle(board, triangleHight);
+		moveTriangle(board, triangleHight, wiederholungen);
 
 	}
 
-	public static void moveTriangle(BoardService board, int reihen) {
+	public static void moveTriangle(BoardService board, int reihen, int wiederholungen) {
 
 		int baseLine = (reihen - 1) * 2 + 1;
 		Led leds[][] = board.getAllLeds();
 
-		int maxVerschiebung = 32 - baseLine;
+		int maxVerschiebung = board.LEDS_PER_ROW - baseLine + 1;
+		
 
-		// geht 27 mal durch
-		// Durchläuft die maximale Anzahl von Verschiebungen
-	    for (int versch = 0; versch <= maxVerschiebung; versch++) {
+		for (int w = 0; w < wiederholungen; w++) {
+			int versch = 0;
+			boolean moveToRight = true; // Startet mit Bewegung nach rechts
+			
+			do {
+				// Alle LEDs ausschalten
+				for (int y = 0; y < reihen; y++) {
+					for (int x = 0; x < board.LEDS_PER_ROW; x++) {
+						leds[y][x].turnOff();
+					}
+				}
 
-	        // Zuerst alle LEDs ausschalten
-	        for (int y = 0; y < reihen; y++) {
-	            for (int x = 0; x < board.LEDS_PER_ROW; x++) {
-	                leds[y][x].turnOff();
-	            }
-	        }
+				// Dreieck zeichnen
+				for (int y = 0; y < reihen; y++) {
+					for (int x = 0; x < 2 * y + 1; x++) {
+						int ledX = x + versch + (reihen - y - 1); // Berechne die X-Position für das LED
+						if (ledX < board.LEDS_PER_ROW) { // Überprüfe die Grenze des Boards
+							leds[y][ledX].turnOn();
+						}
+					}
+				}
 
-	        // Schleife, um das Dreieck neu zu zeichnen
-	        for (int y = 0; y < reihen; y++) {
-	            // Beginne das Einschalten an einer neuen Position, die der Verschiebung entspricht
-	            int start = versch + (reihen - y - 1); // Verschiebung plus die Position, um das Dreieck zu erhalten
-	            int end = start + (2 * y) + 1; // Das Ende der Einschaltung für diese Zeile
-	            
-	            for (int x = start; x < end && x < board.LEDS_PER_ROW; x++) {
-	                leds[y][x].turnOn();
-	            }
-	        }
 
-	        // Kurze Pause, um die Verschiebung zu visualisieren
-	        board.pauseExecution(100);
-	    }
+				// Bewegungsrichtung wechseln 
+				if (moveToRight) {
+					if (versch < maxVerschiebung - 1) { // Erreiche die max Verschiebung nicht, um Platz für das letzte LED zu lassen
+						versch++;
+					} else {
+						moveToRight = false; // Wechsle die Richtung
+					}
+				} else {
+					if (versch >= 0) {
+						versch--;
+					} else {
+						moveToRight = true; // Wechsle die Richtung am Anfang
+					}
+				}
+				// Fortsetzen, solange das Dreieck nicht wieder am Anfang 
+			} while (versch >= 0 || moveToRight);
+		}
 
 	}
 
@@ -644,7 +660,7 @@ public class ClientApp {
 		// showBorder(board);
 		// showSquare(board);
 		// showRectangle(board);
-		showTriangle(board);
+		showTriangle(board, 3);
 		// createRunningLight(board);
 
 	}
