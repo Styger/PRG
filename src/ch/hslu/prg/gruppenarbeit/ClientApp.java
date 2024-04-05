@@ -67,8 +67,8 @@ public class ClientApp {
 			}
 
 			// 1.1.5
-			// 125 Millisekunden anhlten
-			board.pauseExecution(125);
+			// 250 Millisekunden anhlten
+			board.pauseExecution(250);
 
 			// 1.1.6
 			// Alle LEDs von links nach rechts ausschalten
@@ -79,8 +79,8 @@ public class ClientApp {
 			}
 
 			// 1.1.7
-			// 125 Millisekunden anhlten
-			board.pauseExecution(125);
+			// 250 Millisekunden anhlten
+			board.pauseExecution(250);
 		}
 
 		// 1.1.9
