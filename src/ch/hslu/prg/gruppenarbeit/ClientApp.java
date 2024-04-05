@@ -545,112 +545,94 @@ public class ClientApp {
 
 	}
 
-	public static void moveTriangle(BoardService board, int rows) {
+	public static void moveTriangle(BoardService board, int reihen) {
 
-		int baseLine = (rows - 1) * 2 + 1;
+		int baseLine = (reihen - 1) * 2 + 1;
 		Led leds[][] = board.getAllLeds();
-		boolean leftToRight0 = true;
-		boolean leftToRight1 = true;
-		
-		for (int i = 0; i < board.LEDS_PER_ROW - baseLine; i++) {
 
-			for (int y = 0; y < rows; y++) {
-				for (int x = 0; x < board.LEDS_PER_ROW; x++) {
-					if (leftToRight0) {
-						if (x > 0 && leds[y][x - 1].isOn() && !leds[y][x].isOn()) {
-							leds[y][x].turnOn();
-							
-							
-							if(x == board.LEDS_PER_ROW-1 && y == rows-1) {
-								leftToRight0 = false;
-								System.out.println(leftToRight0);
-								x=0;
-							}
-							// naechstes ueberspringen
-							x++;
-							
-						}
-					}
+		int maxVerschiebung = 32 - baseLine;
 
-				}
-			}
+		// geht 27 mal durch
+		// Durchläuft die maximale Anzahl von Verschiebungen
+	    for (int versch = 0; versch <= maxVerschiebung; versch++) {
 
-			for (int y = 0; y < rows; y++) {
-				for (int x = 0; x < board.LEDS_PER_ROW; x++) {
-					if (leftToRight1) {
-						if (leds[y][x].isOn() && x == 0) {
-							leds[y][x].turnOff();
-							// naechstes ueberspringen
-							x++;
+	        // Zuerst alle LEDs ausschalten
+	        for (int y = 0; y < reihen; y++) {
+	            for (int x = 0; x < board.LEDS_PER_ROW; x++) {
+	                leds[y][x].turnOff();
+	            }
+	        }
 
-						} else if (leds[y][x].isOn() && !leds[y][x - 1].isOn()) {
-							leds[y][x].turnOff();
-							
-							if(x == board.LEDS_PER_ROW-baseLine-1 && y == rows-1) {
-								leftToRight1 = false;
-								System.out.println(leftToRight1);
-							}
-							// naechstes ueberspringen
-							x++;
-							
-						}
-					}
-				}
-			}
-		}
+	        // Schleife, um das Dreieck neu zu zeichnen
+	        for (int y = 0; y < reihen; y++) {
+	            // Beginne das Einschalten an einer neuen Position, die der Verschiebung entspricht
+	            int start = versch + (reihen - y - 1); // Verschiebung plus die Position, um das Dreieck zu erhalten
+	            int end = start + (2 * y) + 1; // Das Ende der Einschaltung für diese Zeile
+	            
+	            for (int x = start; x < end && x < board.LEDS_PER_ROW; x++) {
+	                leds[y][x].turnOn();
+	            }
+	        }
+
+	        // Kurze Pause, um die Verschiebung zu visualisieren
+	        board.pauseExecution(100);
+	    }
 
 	}
 
 	public static void createRunningLight(BoardService board) {
-		
-	// LED Reihe ohne Farbe explizit angeben dem Board hinzufügen
-	int reihen = 1;
-	board.add(reihen);
-		
-	// Variable für die Zyklen
-		
-	// zwei Dimensionales LED Array
-	Led leds[][] = board.getAllLeds();
-		
-	// Alle LEDs von rechts nach Links einschalten
-	for (int i = 31; i >= 0; i--) {
-		for (int y = (reihen - 1); y >= 0; y--) {
-			leds[y][i].turnOn();
-		}
-	}
-		
-	// LED in 8er Reihen unterteilen von rechts nach links
-	for (int i = 31; i >= 0; i--) {
-		if (i >= 24) {
-			board.replace(leds[0][i], LedColor.GREEN);
-			leds[0][i].turnOn();
-		}else if (i >= 16) {
-			board.replace(leds[0][i], LedColor.RED);
-			leds[0][i].turnOn();
-		}else if (i >= 8) {
-			board.replace(leds[0][i], LedColor.BLUE);
-			leds[0][i].turnOn();
-		}else {
-			board.replace(leds[0][i], LedColor.YELLOW);
-			leds[0][i].turnOn();
-		}
-	}
-		
-		
-	// Der Change der LED's 3 Mal vollständig machen
-	for (int i = 0; i <= 3; i++) {
-		LedColor farbeLetztenLED = leds[0][31].getColor();
 
-		// LEDs Farbe um eine Position nach rechts verschieben
-		for (int p = 1; p < 30; p++) {
-			LedColor aktuelleFarbe = leds[0][p].getColor();
-			board.replace(leds[0][p+1], aktuelleFarbe);
+		// LED Reihe ohne Farbe explizit angeben dem Board hinzufügen
+		int reihen = 1;
+		board.add(reihen);
+
+		// Variable für die Zyklen
+
+		// zwei Dimensionales LED Array
+		Led leds[][] = board.getAllLeds();
+
+		// Alle LEDs von rechts nach Links einschalten
+		for (int i = 31; i >= 0; i--) {
+			for (int y = (reihen - 1); y >= 0; y--) {
+				leds[y][i].turnOn();
+			}
 		}
-			
+
+		// LED in 8er Reihen unterteilen von rechts nach links
+		for (int i = 31; i >= 0; i--) {
+			if (i >= 24) {
+				board.replace(leds[0][i], LedColor.GREEN);
+				leds[0][i].turnOn();
+			} else if (i >= 16) {
+				board.replace(leds[0][i], LedColor.RED);
+				leds[0][i].turnOn();
+			} else if (i >= 8) {
+				board.replace(leds[0][i], LedColor.BLUE);
+				leds[0][i].turnOn();
+			} else {
+				board.replace(leds[0][i], LedColor.YELLOW);
+				leds[0][i].turnOn();
+			}
+		}
+
+		// Drei Sekunden anhlten
+		board.pauseExecution(2000);
+
+		// Der Change der LED's 3 Mal vollständig machen
+		LedColor farbeLetztenLED = leds[0][31].getColor();
 		// letzte LED an die erste LED verschieben
 		board.replace(leds[0][0], farbeLetztenLED);
+		for (int i = 0; i <= 3; i++) {
+
+			// LEDs Farbe um eine Position nach rechts verschieben
+			// for (int p = 1; p < 30; p++) {
+			// LedColor aktuelleFarbe = leds[0][p].getColor();
+			// board.replace(leds[0][p+1], aktuelleFarbe);
+			// }
+
+		}
+
 	}
-}
 
 	public static void main(String[] args) {
 		BoardService board = new BoardService();
@@ -662,8 +644,8 @@ public class ClientApp {
 		// showBorder(board);
 		// showSquare(board);
 		// showRectangle(board);
-		// showTriangle(board);
-		createRunningLight(board);
+		showTriangle(board);
+		// createRunningLight(board);
 
 	}
 
