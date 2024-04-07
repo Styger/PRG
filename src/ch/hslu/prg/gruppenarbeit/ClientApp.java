@@ -651,10 +651,54 @@ public class ClientApp {
 		}
 
 	}
+	public static void countColors(BoardService board) {
+		// Maximale Anzahl Reihen hinzufuegen
+		board.add(board.MAX_ROWS, LedColor.RANDOM);
 
-	// 10.1
+		// zwei Dimensionales LED Array
+		Led leds[][] = board.getAllLeds();
+		
+		//Alle Leds einschalten von Links nach Rechts
+		for (int x = 0; x < board.MAX_ROWS; x++) {
+			for (int y = 0; y < board.MAX_ROWS; y++) {
+				leds[y][x].turnOn();
+			}
+		}
+		
+		// Zwei Sekunden anhlten
+		board.pauseExecution(2000);
+		
+		
+		int blueAnz = 0;
+		int greenAnz = 0;
+		int yellowAnz = 0;
+		int redAnz = 0;
+		
+		for (int x = 0; x < board.MAX_ROWS; x++) {
+			for (int y = 0; y < board.MAX_ROWS; y++) {
+				if(leds[y][x].getColor() == LedColor.BLUE){
+					blueAnz++;
+				}
+				if(leds[y][x].getColor() == LedColor.GREEN){
+					greenAnz++;
+				}
+				if(leds[y][x].getColor() == LedColor.YELLOW){
+					yellowAnz++;
+				}
+				if(leds[y][x].getColor() == LedColor.RED){
+					redAnz++;
+				}
+			}
+		}
+		System.out.println("Blau: " + blueAnz);
+		System.out.println("Grün: " + greenAnz);
+		System.out.println("Gelb: " + yellowAnz);
+		System.out.println("Rot: " + redAnz);
+	}
+
+	// 10.2
 	public static void countColorsExt(BoardService board) {
-
+		
 		// Maximale Anzahl Reihen hinzufuegen
 		board.add(board.MAX_ROWS, LedColor.RANDOM);
 
@@ -718,10 +762,15 @@ public class ClientApp {
 				redZeile = x;
 			}
 		}
+		System.out.println();
 		System.out.println(" Led Farbe: Blau \n Anzahl Leds in dieser Zeile: " +blueAnz + "\n Zeile mit am meisten blauen Leds: " + blueZeile);
+		System.out.println();
 		System.out.println(" Led Farbe: Grün \n Anzahl Leds in dieser Zeile: " +greenAnz + "\n Zeile mit am meisten grünen Leds: " + greenZeile);
+		System.out.println();
 		System.out.println(" Led Farbe: Gelb \n Anzahl Leds in dieser Zeile: " +yellowAnz + "\n Zeile mit am meisten gelben Leds: " + yellowZeile);
+		System.out.println();
 		System.out.println(" Led Farbe: Rot \n Anzahl Leds in dieser Zeile: " +redAnz + "\n Zeile mit am meisten baluen Leds: " + redZeile);
+		System.out.println();
 
 	}
 
@@ -737,6 +786,7 @@ public class ClientApp {
 		// showRectangle(board);
 		//showTriangle(board, 3);
 		// createRunningLight(board);
+		countColors(board);
 		countColorsExt(board);
 
 	}
