@@ -506,6 +506,7 @@ public class ClientApp {
 
 	}
 
+	// 8.1
 	public static void showTriangle(BoardService board, int wiederholungen) {
 		// Scanner erstellen
 		Scanner sc = new Scanner(System.in);
@@ -545,18 +546,18 @@ public class ClientApp {
 
 	}
 
+	// 8.2
 	public static void moveTriangle(BoardService board, int reihen, int wiederholungen) {
 
 		int baseLine = (reihen - 1) * 2 + 1;
 		Led leds[][] = board.getAllLeds();
 
 		int maxVerschiebung = board.LEDS_PER_ROW - baseLine + 1;
-		
 
 		for (int w = 0; w < wiederholungen; w++) {
 			int versch = 0;
 			boolean moveToRight = true; // Startet mit Bewegung nach rechts
-			
+
 			do {
 				// Alle LEDs ausschalten
 				for (int y = 0; y < reihen; y++) {
@@ -575,10 +576,10 @@ public class ClientApp {
 					}
 				}
 
-
-				// Bewegungsrichtung wechseln 
+				// Bewegungsrichtung wechseln
 				if (moveToRight) {
-					if (versch < maxVerschiebung - 1) { // Erreiche die max Verschiebung nicht, um Platz für das letzte LED zu lassen
+					if (versch < maxVerschiebung - 1) { // Erreiche die max Verschiebung nicht, um Platz für das letzte
+														// LED zu lassen
 						versch++;
 					} else {
 						moveToRight = false; // Wechsle die Richtung
@@ -590,12 +591,13 @@ public class ClientApp {
 						moveToRight = true; // Wechsle die Richtung am Anfang
 					}
 				}
-				// Fortsetzen, solange das Dreieck nicht wieder am Anfang 
+				// Fortsetzen, solange das Dreieck nicht wieder am Anfang
 			} while (versch >= 0 || moveToRight);
 		}
 
 	}
 
+	// 9
 	public static void createRunningLight(BoardService board) {
 
 		// LED Reihe ohne Farbe explizit angeben dem Board hinzufügen
@@ -631,7 +633,7 @@ public class ClientApp {
 			}
 		}
 
-		// Drei Sekunden anhlten
+		// Zwei Sekunden anhlten
 		board.pauseExecution(2000);
 
 		// Der Change der LED's 3 Mal vollständig machen
@@ -650,6 +652,79 @@ public class ClientApp {
 
 	}
 
+	// 10.1
+	public static void countColorsExt(BoardService board) {
+
+		// Maximale Anzahl Reihen hinzufuegen
+		board.add(board.MAX_ROWS, LedColor.RANDOM);
+
+		// zwei Dimensionales LED Array
+		Led leds[][] = board.getAllLeds();
+		
+		//Alle Leds einschalten von Links nach Rechts
+		for (int x = 0; x < board.MAX_ROWS; x++) {
+			for (int y = 0; y < board.MAX_ROWS; y++) {
+				leds[y][x].turnOn();
+			}
+		}
+		
+		// Zwei Sekunden anhlten
+		board.pauseExecution(2000);
+
+		// Zeile mit am meisten gleichen Farbe herausfinden
+		int blueAnz = 0;
+		int blueZeile = 0;
+		int greenAnz = 0;
+		int greenZeile = 0;
+		int yellowAnz = 0;
+		int yellowZeile = 0;
+		int redAnz = 0;
+		int redZeile = 0;
+		
+		for (int x = 0; x < board.MAX_ROWS; x++) {
+			int tempBlueAnz = 0;
+			int tempGreenAnz = 0;
+			int tempYellowAnz = 0;
+			int tempRedAnz = 0;
+			
+			for (int y = 0; y < board.MAX_ROWS; y++) {
+				if(leds[y][x].getColor() == LedColor.BLUE){
+					tempBlueAnz++;
+				}
+				if(leds[y][x].getColor() == LedColor.GREEN){
+					tempGreenAnz++;
+				}
+				if(leds[y][x].getColor() == LedColor.YELLOW){
+					tempYellowAnz++;
+				}
+				if(leds[y][x].getColor() == LedColor.RED){
+					tempRedAnz++;
+				}
+			}
+			if(blueAnz < tempBlueAnz) {
+				blueAnz = tempBlueAnz;
+				blueZeile = x;
+			}
+			if(greenAnz < tempGreenAnz) {
+				greenAnz = tempGreenAnz;
+				greenZeile = x;
+			}
+			if(yellowAnz < tempYellowAnz) {
+				yellowAnz = tempYellowAnz;
+				yellowZeile = x;
+			}
+			if(redAnz < tempRedAnz) {
+				redAnz = tempRedAnz;
+				redZeile = x;
+			}
+		}
+		System.out.println(" Led Farbe: Blau \n Anzahl Leds in dieser Zeile: " +blueAnz + "\n Zeile mit am meisten blauen Leds: " + blueZeile);
+		System.out.println(" Led Farbe: Grün \n Anzahl Leds in dieser Zeile: " +greenAnz + "\n Zeile mit am meisten grünen Leds: " + greenZeile);
+		System.out.println(" Led Farbe: Gelb \n Anzahl Leds in dieser Zeile: " +yellowAnz + "\n Zeile mit am meisten gelben Leds: " + yellowZeile);
+		System.out.println(" Led Farbe: Rot \n Anzahl Leds in dieser Zeile: " +redAnz + "\n Zeile mit am meisten baluen Leds: " + redZeile);
+
+	}
+
 	public static void main(String[] args) {
 		BoardService board = new BoardService();
 
@@ -660,8 +735,9 @@ public class ClientApp {
 		// showBorder(board);
 		// showSquare(board);
 		// showRectangle(board);
-		showTriangle(board, 3);
+		//showTriangle(board, 3);
 		// createRunningLight(board);
+		countColorsExt(board);
 
 	}
 
