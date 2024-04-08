@@ -615,21 +615,20 @@ public class ClientApp {
 				leds[y][i].turnOn();
 			}
 		}
-		
 
 		// LED in 8er Reihen unterteilen von rechts nach links
 		for (int i = 31; i >= 0; i--) {
 			if (i >= 24) {
-				board.replace(leds[0][i], LedColor.GREEN);
+				leds[0][i] = board.replace(leds[0][i], LedColor.GREEN);
 				leds[0][i].turnOn();
 			} else if (i >= 16) {
-				board.replace(leds[0][i], LedColor.RED);
+				leds[0][i] = board.replace(leds[0][i], LedColor.RED);
 				leds[0][i].turnOn();
 			} else if (i >= 8) {
-				board.replace(leds[0][i], LedColor.BLUE);
+				leds[0][i] = board.replace(leds[0][i], LedColor.BLUE);
 				leds[0][i].turnOn();
 			} else {
-				board.replace(leds[0][i], LedColor.YELLOW);
+				leds[0][i] = board.replace(leds[0][i], LedColor.YELLOW);
 				leds[0][i].turnOn();
 			}
 		}
@@ -637,56 +636,62 @@ public class ClientApp {
 		// Zwei Sekunden anhlten
 		board.pauseExecution(2000);
 
-		// Der Change der LED's 3 Mal vollständig machen
-		LedColor farbeLetztenLED = leds[0][31].getColor();
-		// letzte LED an die erste LED verschieben
-		board.replace(leds[0][0], farbeLetztenLED);
+
+
 		for (int i = 0; i <= 3; i++) {
+			// Der Change der LED's 3 Mal vollständig machen
+			LedColor farbeLetztenLED = leds[0][31].getColor();
 
 			// LEDs Farbe um eine Position nach rechts verschieben
-			// for (int p = 1; p < 30; p++) {
-			// LedColor aktuelleFarbe = leds[0][p].getColor();
-			// board.replace(leds[0][p+1], aktuelleFarbe);
-			// }
+			for (int p = 1; p < 31; p++) {
+				
+				LedColor aktuelleFarbe = leds[0][p].getColor();
+				LedColor naechsteFarbe = leds[0][p+1].getColor();
+				leds[0][p + 1] = board.replace(leds[0][p + 1], aktuelleFarbe);
+				leds[0][p + 2] = board.replace(leds[0][p + 2], naechsteFarbe);
+			}
+			// letzte LED an die erste LED verschieben
+			board.replace(leds[0][0], farbeLetztenLED);
 
 		}
+		
 
 	}
+
 	public static void countColors(BoardService board) {
 		// Maximale Anzahl Reihen hinzufuegen
 		board.add(board.MAX_ROWS, LedColor.RANDOM);
 
 		// zwei Dimensionales LED Array
 		Led leds[][] = board.getAllLeds();
-		
-		//Alle Leds einschalten von Links nach Rechts
+
+		// Alle Leds einschalten von Links nach Rechts
 		for (int x = 0; x < board.MAX_ROWS; x++) {
 			for (int y = 0; y < board.MAX_ROWS; y++) {
 				leds[y][x].turnOn();
 			}
 		}
-		
+
 		// Zwei Sekunden anhlten
 		board.pauseExecution(2000);
-		
-		
+
 		int blueAnz = 0;
 		int greenAnz = 0;
 		int yellowAnz = 0;
 		int redAnz = 0;
-		
+
 		for (int x = 0; x < board.MAX_ROWS; x++) {
 			for (int y = 0; y < board.MAX_ROWS; y++) {
-				if(leds[y][x].getColor() == LedColor.BLUE){
+				if (leds[y][x].getColor() == LedColor.BLUE) {
 					blueAnz++;
 				}
-				if(leds[y][x].getColor() == LedColor.GREEN){
+				if (leds[y][x].getColor() == LedColor.GREEN) {
 					greenAnz++;
 				}
-				if(leds[y][x].getColor() == LedColor.YELLOW){
+				if (leds[y][x].getColor() == LedColor.YELLOW) {
 					yellowAnz++;
 				}
-				if(leds[y][x].getColor() == LedColor.RED){
+				if (leds[y][x].getColor() == LedColor.RED) {
 					redAnz++;
 				}
 			}
@@ -699,20 +704,20 @@ public class ClientApp {
 
 	// 10.2
 	public static void countColorsExt(BoardService board) {
-		
+
 		// Maximale Anzahl Reihen hinzufuegen
 		board.add(board.MAX_ROWS, LedColor.RANDOM);
 
 		// zwei Dimensionales LED Array
 		Led leds[][] = board.getAllLeds();
-		
-		//Alle Leds einschalten von Links nach Rechts
+
+		// Alle Leds einschalten von Links nach Rechts
 		for (int x = 0; x < board.MAX_ROWS; x++) {
 			for (int y = 0; y < board.MAX_ROWS; y++) {
 				leds[y][x].turnOn();
 			}
 		}
-		
+
 		// Zwei Sekunden anhlten
 		board.pauseExecution(2000);
 
@@ -725,52 +730,56 @@ public class ClientApp {
 		int yellowZeile = 0;
 		int redAnz = 0;
 		int redZeile = 0;
-		
+
 		for (int x = 0; x < board.MAX_ROWS; x++) {
 			int tempBlueAnz = 0;
 			int tempGreenAnz = 0;
 			int tempYellowAnz = 0;
 			int tempRedAnz = 0;
-			
+
 			for (int y = 0; y < board.MAX_ROWS; y++) {
-				if(leds[y][x].getColor() == LedColor.BLUE){
+				if (leds[y][x].getColor() == LedColor.BLUE) {
 					tempBlueAnz++;
 				}
-				if(leds[y][x].getColor() == LedColor.GREEN){
+				if (leds[y][x].getColor() == LedColor.GREEN) {
 					tempGreenAnz++;
 				}
-				if(leds[y][x].getColor() == LedColor.YELLOW){
+				if (leds[y][x].getColor() == LedColor.YELLOW) {
 					tempYellowAnz++;
 				}
-				if(leds[y][x].getColor() == LedColor.RED){
+				if (leds[y][x].getColor() == LedColor.RED) {
 					tempRedAnz++;
 				}
 			}
-			if(blueAnz < tempBlueAnz) {
+			if (blueAnz < tempBlueAnz) {
 				blueAnz = tempBlueAnz;
 				blueZeile = x;
 			}
-			if(greenAnz < tempGreenAnz) {
+			if (greenAnz < tempGreenAnz) {
 				greenAnz = tempGreenAnz;
 				greenZeile = x;
 			}
-			if(yellowAnz < tempYellowAnz) {
+			if (yellowAnz < tempYellowAnz) {
 				yellowAnz = tempYellowAnz;
 				yellowZeile = x;
 			}
-			if(redAnz < tempRedAnz) {
+			if (redAnz < tempRedAnz) {
 				redAnz = tempRedAnz;
 				redZeile = x;
 			}
 		}
 		System.out.println();
-		System.out.println(" Led Farbe: Blau \n Anzahl Leds in dieser Zeile: " +blueAnz + "\n Zeile mit am meisten blauen Leds: " + blueZeile);
+		System.out.println(" Led Farbe: Blau \n Anzahl Leds in dieser Zeile: " + blueAnz
+				+ "\n Zeile mit am meisten blauen Leds: " + blueZeile);
 		System.out.println();
-		System.out.println(" Led Farbe: Grün \n Anzahl Leds in dieser Zeile: " +greenAnz + "\n Zeile mit am meisten grünen Leds: " + greenZeile);
+		System.out.println(" Led Farbe: Grün \n Anzahl Leds in dieser Zeile: " + greenAnz
+				+ "\n Zeile mit am meisten grünen Leds: " + greenZeile);
 		System.out.println();
-		System.out.println(" Led Farbe: Gelb \n Anzahl Leds in dieser Zeile: " +yellowAnz + "\n Zeile mit am meisten gelben Leds: " + yellowZeile);
+		System.out.println(" Led Farbe: Gelb \n Anzahl Leds in dieser Zeile: " + yellowAnz
+				+ "\n Zeile mit am meisten gelben Leds: " + yellowZeile);
 		System.out.println();
-		System.out.println(" Led Farbe: Rot \n Anzahl Leds in dieser Zeile: " +redAnz + "\n Zeile mit am meisten baluen Leds: " + redZeile);
+		System.out.println(" Led Farbe: Rot \n Anzahl Leds in dieser Zeile: " + redAnz
+				+ "\n Zeile mit am meisten baluen Leds: " + redZeile);
 		System.out.println();
 
 	}
@@ -785,10 +794,10 @@ public class ClientApp {
 		// showBorder(board);
 		// showSquare(board);
 		// showRectangle(board);
-		//showTriangle(board, 3);
-		// createRunningLight(board);
-		countColors(board);
-		countColorsExt(board);
+		// showTriangle(board, 3);
+		createRunningLight(board);
+		// countColors(board);
+		// countColorsExt(board);
 
 	}
 

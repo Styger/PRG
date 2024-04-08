@@ -12,3 +12,7 @@
 2024-04-04 21:07:46,105 ERROR c.h.p.l.p.i.BordProxyImpl [main] Replacing of led failed (HttpStatus Code: 400)
 2024-04-04 21:08:09,225 ERROR c.h.p.l.p.i.BordProxyImpl [main] Replacing of led failed (HttpStatus Code: 400)
 2024-04-04 21:16:21,872 ERROR c.h.p.l.p.i.BordProxyImpl [main] Replacing of led failed (HttpStatus Code: 400)
+2024-04-08 12:54:29,311 ERROR c.h.p.l.p.i.BordProxyImpl [main] Replacing of led failed (HttpStatus Code: 400)
+2024-04-08 12:57:55,283 ERROR c.h.p.l.p.i.BordProxyImpl [main] Replacing of led failed (HttpStatus Code: 400)
+2024-04-08 13:00:12,848 ERROR c.h.p.l.p.i.BordProxyImpl [main] Replacing of led failed (HttpStatus Code: 400)
+2024-04-08 13:02:09,175 ERROR c.h.p.l.p.i.BordProxyImpl [main] Replacing of led failed (HttpStatus Code: 400)
