@@ -72,7 +72,7 @@ public class ClientApp {
 
 			// 1.1.6
 			// Alle LEDs von links nach rechts ausschalten
-			for (int i = 0; i < 32; i++) {
+			for (int i = 0; i < board.MAX_ROWS; i++) {
 				for (int y = 0; y < reihen; y++) {
 					leds[y][i].turnOff();
 				}
@@ -121,7 +121,7 @@ public class ClientApp {
 			// Alle geraden LEDs einschalten
 
 			// Alle LEDs von links nach rechts
-			for (int i = 0; i < 32; i++) {
+			for (int i = 0; i < board.MAX_ROWS; i++) {
 				for (int y = 0; y < reihen; y++) {
 					// wenn gerade (restlos durch 2 teilbar)
 					if (leds[y][i].getLedId() % 2 == 0) {
@@ -135,7 +135,7 @@ public class ClientApp {
 			board.pauseExecution(1000);
 
 			// 2.5
-			for (int i = 0; i < 32; i++) {
+			for (int i = 0; i < board.MAX_ROWS; i++) {
 				for (int y = 0; y < reihen; y++) {
 					// wenn angeschaltet dann ausschalten sonst anschalten
 					if (leds[y][i].isOn()) {
@@ -153,7 +153,7 @@ public class ClientApp {
 
 		// 2.8
 		// Alle leds aussschalten
-		for (int i = 0; i < 32; i++) {
+		for (int i = 0; i < board.MAX_ROWS; i++) {
 			for (int y = 0; y < reihen; y++) {
 				leds[y][i].turnOff();
 			}
@@ -222,12 +222,12 @@ public class ClientApp {
 		// zwei Dimensionales LED Array
 		Led leds[][] = board.getAllLeds();
 
-		int sumLeds = 32 * reihen;
+		int sumLeds = board.MAX_ROWS * reihen;
 		int countDown = sumLeds / 2;
 
 		do {
 			int y = r.nextInt(reihen);
-			int i = r.nextInt(32);
+			int i = r.nextInt(board.MAX_ROWS);
 			if (!leds[y][i].isOn()) {
 				countDown--;
 				leds[y][i].turnOn();
@@ -244,7 +244,7 @@ public class ClientApp {
 
 			// 3.6
 			// Alle eingeschalteten LEDs ausschalten alle ausgeschalteten einschalten
-			for (int i = 0; i < 32; i++) {
+			for (int i = 0; i < board.MAX_ROWS; i++) {
 				for (int y = 0; y < reihen; y++) {
 					if (leds[y][i].isOn()) {
 						leds[y][i].turnOff();
@@ -530,7 +530,7 @@ public class ClientApp {
 		// Alle LEDs von von oben nach unten
 		int halfbaseLine = (triangleHight - 1);
 		for (int y = 0; y < triangleHight; y++) {
-			for (int x = 0; x < 32; x++) {
+			for (int x = 0; x < board.MAX_ROWS; x++) {
 				// Rand des Dreiecks zeichenen
 				// if((baseLine-y) == x || (baseLine+y) == x) {
 				// leds[y][x].turnOn();
@@ -615,6 +615,7 @@ public class ClientApp {
 				leds[y][i].turnOn();
 			}
 		}
+		
 
 		// LED in 8er Reihen unterteilen von rechts nach links
 		for (int i = 31; i >= 0; i--) {
