@@ -778,17 +778,17 @@ public class ClientApp {
 			}
 		}
 		System.out.println();
-		System.out.println(" Led Farbe: Blau \n Anzahl Leds in dieser Zeile: " + blueAnz
-				+ "\n Zeile mit am meisten blauen Leds: " + blueZeile);
+		System.out.println(" Led Farbe: Blau \n Zeile mit am meisten blauen Leds: " + blueZeile
+				+ "\n Anzahl Leds in dieser Zeile: " + blueAnz);
 		System.out.println();
-		System.out.println(" Led Farbe: Grün \n Anzahl Leds in dieser Zeile: " + greenAnz
-				+ "\n Zeile mit am meisten grünen Leds: " + greenZeile);
+		System.out.println(" Led Farbe: Grün \n Zeile mit am meisten grünen Leds: " + greenZeile
+				+ "\n Anzahl Leds in dieser Zeile: " + greenAnz);
 		System.out.println();
-		System.out.println(" Led Farbe: Gelb \n Anzahl Leds in dieser Zeile: " + yellowAnz
-				+ "\n Zeile mit am meisten gelben Leds: " + yellowZeile);
+		System.out.println(" Led Farbe: Gelb \n Zeile mit am meisten gelben Leds: " + yellowZeile
+				+ "\n Anzahl Leds in dieser Zeile: " + yellowAnz);
 		System.out.println();
-		System.out.println(" Led Farbe: Rot \n Anzahl Leds in dieser Zeile: " + redAnz
-				+ "\n Zeile mit am meisten baluen Leds: " + redZeile);
+		System.out.println(" Led Farbe: Rot \n Zeile mit am meisten roten Leds: " + redZeile
+				+ "\n Anzahl Leds in dieser Zeile: " + redAnz);
 		System.out.println();
 
 	}
@@ -804,9 +804,9 @@ public class ClientApp {
 		 //showSquare(board);
 		 //showRectangle(board);
 		 //showTriangle(board, 3);
-		 createRunningLight(board);
+		 //createRunningLight(board);
 		 //countColors(board);
-		 //countColorsExt(board);
+		 countColorsExt(board);
 
 	}
 
