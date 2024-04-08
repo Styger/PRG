@@ -632,35 +632,37 @@ public class ClientApp {
 				leds[0][i].turnOn();
 			}
 		}
-
+		
 		// Zwei Sekunden anhlten
 		board.pauseExecution(2000);
-		// Die Farbe der LEDs um eine Position nach rechts verschieben
-		for (int z = 0; z < 3; z++) { // Dieser äußere Loop stellt sicher, dass der Verschiebungsprozess 3 Mal durchgeführt wird.
-		    for (int durchlauf = 0; durchlauf < 32; durchlauf++) { // Ein Durchlauf für jede LED in der Reihe.
-		        
-		        
-		        for(int i= 0;i < 31; i++) {
-		        	if(i ==7) {
-		        		 // Die Farbe der letzten LED speichern, um sie am Anfang zu setzen.
-				        LedColor farbeDerLetztenLED = leds[0][BoardService.LEDS_PER_ROW - 1].getColor();
-				        // Die gespeicherte Farbe der letzten LED an den Anfang setzen.
-				        leds[0][0] = board.replace(leds[0][0], farbeDerLetztenLED);
-				        
-		        	}
-		        	
-		        	if(leds[0][i].getColor()!=leds[0][i+1].getColor()) {
-		        		leds[0][i+1] = board.replace(leds[0][i+1], leds[0][i].getColor());
-		        		
-		        		i++;
-		        	}
-		        }
-		       
-		        
-		        
-		        // Nach jeder Verschiebung kurz warten, um die Animation sichtbar zu machen
-		        board.pauseExecution(100); // Wartezeit von 100 Millisekunden
-		    }
+
+		
+		// 3 Mal durchfuehren
+		for (int z = 0; z < 3; z++) { 
+			// Ein Durchlauf fuer jede LED in der Reihe
+			for (int durchlauf = 0; durchlauf < 32; durchlauf++) { 
+				//Jedes Led wird angefasst 
+				for (int i = 0; i < 31; i++) {
+					//Jedes Achte mal wird der uebertrag vollzogen
+					if (i == 7) {
+						// Die Farbe der letzten LED speichern, um sie am Anfang zu setzen
+						LedColor farbeDerLetztenLED = leds[0][BoardService.LEDS_PER_ROW - 1].getColor();
+						// Die gespeicherte Farbe der letzten LED an den Anfang setzen
+						leds[0][0] = board.replace(leds[0][0], farbeDerLetztenLED);
+					}
+					
+					//Wenn die aktuelle LED nicht die gleiche Farbe wie die nachfolgenden LED 
+					if (leds[0][i].getColor() != leds[0][i + 1].getColor()) {
+						//Farbe der aktuellen LED nehmen und nachfolgeden LED dem entsprechend einfaerben
+						leds[0][i + 1] = board.replace(leds[0][i + 1], leds[0][i].getColor());
+						//naechste LED ueberspringen
+						i++;
+					}
+				}
+
+				// Nach jeder Verschiebung kurz warten, um die Animation sichtbar zu machen
+				board.pauseExecution(100); // Wartezeit von 100 Millisekunden
+			}
 		}
 
 	}
@@ -794,17 +796,17 @@ public class ClientApp {
 	public static void main(String[] args) {
 		BoardService board = new BoardService();
 
-		// ledsOnOff(board);
-		// switchEvenOdd(board);
-		// switchRandom(board);
-		// showBinary(board);
-		// showBorder(board);
-		// showSquare(board);
-		// showRectangle(board);
-		// showTriangle(board, 3);
-		createRunningLight(board);
-		// countColors(board);
-		// countColorsExt(board);
+		 //ledsOnOff(board);
+		 //switchEvenOdd(board);
+		 //switchRandom(board);
+		 //showBinary(board);
+		 //showBorder(board);
+		 //showSquare(board);
+		 //showRectangle(board);
+		 //showTriangle(board, 3);
+		 createRunningLight(board);
+		 //countColors(board);
+		 //countColorsExt(board);
 
 	}
 
