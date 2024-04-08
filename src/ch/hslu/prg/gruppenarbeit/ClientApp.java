@@ -635,26 +635,33 @@ public class ClientApp {
 
 		// Zwei Sekunden anhlten
 		board.pauseExecution(2000);
-
-
-
-		for (int i = 0; i <= 3; i++) {
-			// Der Change der LED's 3 Mal vollständig machen
-			LedColor farbeLetztenLED = leds[0][31].getColor();
-
-			// LEDs Farbe um eine Position nach rechts verschieben
-			for (int p = 1; p < 31; p++) {
-				
-				LedColor aktuelleFarbe = leds[0][p].getColor();
-				LedColor naechsteFarbe = leds[0][p+1].getColor();
-				leds[0][p + 1] = board.replace(leds[0][p + 1], aktuelleFarbe);
-				leds[0][p + 2] = board.replace(leds[0][p + 2], naechsteFarbe);
-			}
-			// letzte LED an die erste LED verschieben
-			board.replace(leds[0][0], farbeLetztenLED);
-
+		// Die Farbe der LEDs um eine Position nach rechts verschieben
+		for (int z = 0; z < 3; z++) { // Dieser äußere Loop stellt sicher, dass der Verschiebungsprozess 3 Mal durchgeführt wird.
+		    for (int durchlauf = 0; durchlauf < 32; durchlauf++) { // Ein Durchlauf für jede LED in der Reihe.
+		        
+		        
+		        for(int i= 0;i < 31; i++) {
+		        	if(i ==7) {
+		        		 // Die Farbe der letzten LED speichern, um sie am Anfang zu setzen.
+				        LedColor farbeDerLetztenLED = leds[0][BoardService.LEDS_PER_ROW - 1].getColor();
+				        // Die gespeicherte Farbe der letzten LED an den Anfang setzen.
+				        leds[0][0] = board.replace(leds[0][0], farbeDerLetztenLED);
+				        
+		        	}
+		        	
+		        	if(leds[0][i].getColor()!=leds[0][i+1].getColor()) {
+		        		leds[0][i+1] = board.replace(leds[0][i+1], leds[0][i].getColor());
+		        		
+		        		i++;
+		        	}
+		        }
+		       
+		        
+		        
+		        // Nach jeder Verschiebung kurz warten, um die Animation sichtbar zu machen
+		        board.pauseExecution(100); // Wartezeit von 100 Millisekunden
+		    }
 		}
-		
 
 	}
 
