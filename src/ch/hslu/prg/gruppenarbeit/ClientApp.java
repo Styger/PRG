@@ -9,21 +9,35 @@ import ch.hslu.prg.ledboard.proxy.LedColor;
 
 public class ClientApp {
 
+	public static int readIntFromUser(int min, int max) {
+		Scanner sc = new Scanner(System.in);
+		int zahl;
+		do {
+			System.out.print("Bitte eine Ganzzahl zwischen " + min + " und " + max + " eingeben: ");
+			// ob die nächste Eingabe ein Int ist
+			while (!sc.hasNextInt()) {
+				System.out.println("\nDas ist keine Ganzzahl. Bitte nochmal versuchen! ");
+				System.out.print("Bitte eine Ganzzahl zwischen " + min + " und " + max + " eingeben: ");
+				// Leert den aktuellen Eingabewert, wenn er kein Int ist
+				sc.next();
+			}
+			zahl = sc.nextInt();
+		} while (zahl < min || zahl > max);
+		return zahl;
+	}
+
 	public static void ledsOnOff(BoardService board) {
+		
 		// Scanner erstellen
 		Scanner sc = new Scanner(System.in);
-
 		// 1.1.1
-		int reihen = 0;
-		do {
-			System.out.println("Anzahl LED Reihen eingeben (1 zwischen 32): ");
-			reihen = sc.nextInt();
-		} while (reihen > board.MAX_ROWS || reihen <= 0);
-
+		int reihen = readIntFromUser(1, board.MAX_ROWS);
+		
 		// 1.2
 		// Farbauswahl
 		LedColor colorLed = null;
-		System.out.println("LED Farbe waehlen: \n 1: Rot \n 2: Gruen \n 3: Gelb \n 4: Blau \n 5: Random");
+		System.out
+				.println("LED Farbe waehlen: \n 1: Rot \n 2: Gruen \n 3: Gelb \n 4: Blau \n 5: Random \n Default: Rot");
 		int wahl = sc.nextInt();
 
 		switch (wahl) {
@@ -60,7 +74,7 @@ public class ClientApp {
 			// 1.1.4
 			// Alle LEDs von rechts nach Links einschalten
 			Led leds[][] = board.getAllLeds();
-			for (int i = 31; i >= 0; i--) {
+			for (int i = board.MAX_ROWS - 1; i >= 0; i--) {
 				for (int y = (reihen - 1); y >= 0; y--) {
 					leds[y][i].turnOn();
 				}
@@ -77,10 +91,10 @@ public class ClientApp {
 					leds[y][i].turnOff();
 				}
 			}
-
 			// 1.1.7
 			// 250 Millisekunden anhlten
 			board.pauseExecution(250);
+
 		}
 
 		// 1.1.9
@@ -94,15 +108,9 @@ public class ClientApp {
 	}
 
 	public static void switchEvenOdd(BoardService board) {
-		// Scanner erstellen
-		Scanner sc = new Scanner(System.in);
-
+		
 		// 2.1
-		int reihen = 0;
-		do {
-			System.out.println("Anzahl LED Reihen eingeben (1 zwischen 32): ");
-			reihen = sc.nextInt();
-		} while (reihen > board.MAX_ROWS || reihen <= 0);
+		int reihen = readIntFromUser(1, board.MAX_ROWS);
 
 		// LED Reihen dem Board hinzufuegen
 		board.add(reihen);
@@ -117,6 +125,12 @@ public class ClientApp {
 		// 2.7
 		// Schritte 3 bis 6 drei mal wiederholen
 		for (int x = 0; x < 3; x++) {
+			/*
+			 * // Optimal koennte man bei jedem Durchlauf alle LEDs ausschalten for (int i =
+			 * 0; i < board.MAX_ROWS; i++) { for (int y = 0; y < reihen; y++) {
+			 * leds[y][i].turnOff(); } }
+			 */
+
 			// 2.3
 			// Alle geraden LEDs einschalten
 
@@ -170,15 +184,9 @@ public class ClientApp {
 	}
 
 	public static void switchRandom(BoardService board) {
-		// Scanner erstellen
-		Scanner sc = new Scanner(System.in);
-
+		
 		// 3.1
-		int reihen = 0;
-		do {
-			System.out.println("Anzahl LED Reihen eingeben (1 zwischen 32): ");
-			reihen = sc.nextInt();
-		} while (reihen > board.MAX_ROWS || reihen <= 0);
+		int reihen = readIntFromUser(1, board.MAX_ROWS);
 
 		// 3.2
 		// zufällige Farbauswahl
@@ -227,6 +235,7 @@ public class ClientApp {
 
 		do {
 			int y = r.nextInt(reihen);
+			// i ist von 0 bis aussschliesslich 32 also 31
 			int i = r.nextInt(board.MAX_ROWS);
 			if (!leds[y][i].isOn()) {
 				countDown--;
@@ -269,14 +278,8 @@ public class ClientApp {
 	}
 
 	public static void showBinary(BoardService board) {
-		// Scanner erstellen
-		Scanner sc = new Scanner(System.in);
-
-		// 4.1
-		// int Zahl in dezimaler Form einlesen
-		int zahl = 0;
-		System.out.println("Bitte eine Ganzzahl eingeben: ");
-		zahl = sc.nextInt();
+		
+		int zahl = readIntFromUser(-2147483648, 2147483647);
 
 		// 4.2
 		// Eingelesene ganze Zahl als Binaerzahl umwandeln
@@ -293,13 +296,13 @@ public class ClientApp {
 		// 4.4
 		Led leds[][] = board.getAllLeds();
 		// LED Postionsvariable
-		int pl = 31;
+		int p = board.MAX_ROWS - 1;
 		// Einschalten der LED's
 		for (int i = binaryString.length() - 1; i >= 0; i--) {
 			if (binaryString.charAt(i) == '1') {
-				leds[0][pl].turnOn();
+				leds[0][p].turnOn();
 			}
-			pl--;
+			p--;
 		}
 
 	}
@@ -333,6 +336,8 @@ public class ClientApp {
 				}
 			}
 		}
+		// Board für 2 Sekunden anhalten
+		board.pauseExecution(2000);
 
 		// Board zurücksetzen
 		board.removeAllLeds();
@@ -351,12 +356,11 @@ public class ClientApp {
 		// Koordinaten in dezimaler Form einlesen
 		int reihe = 0;
 		int spalte = 0;
-		System.out.print("Bitte eine Ganzzahl fuer die Reihe eingeben: ");
-		reihe = sc.nextInt();
-		reihe--;
-		System.out.print("Bitte eine Ganzzahl fuer die Spalte eingeben: ");
-		spalte = sc.nextInt();
-		spalte--;
+		System.out.println("Bitte eine Ganzzahl fuer die Reihe eingeben");
+		reihe = readIntFromUser(0, BoardService.MAX_ROWS-1);
+
+		System.out.println("Bitte eine Ganzzahl fuer die Spalte eingeben");
+		spalte = readIntFromUser(0, BoardService.MAX_ROWS-1);
 
 		// Darstellen des topleft Punkts
 		leds[reihe][spalte].turnOn();
@@ -384,18 +388,17 @@ public class ClientApp {
 
 		// 6.2
 		// Abfrage, ob Diagonale gezeichnet werden soll
-		boolean diagonaleLinksNachRechtsAktiv = false;
-		boolean diagonaleRechtsNachLinksAktiv = false;
+
 		System.out.print(
 				"Sollen die Diagonalen des Quadrates von links nach rechts auch gezeichnet werden? (true/false): ");
-		diagonaleLinksNachRechtsAktiv = sc.nextBoolean();
+		int diagonaleLinksNachRechtsAktiv = readIntFromUser(0, 1);
 		System.out.print(
 				"Sollen die Diagonalen des Quadrates von rechts nach links auch gezeichnet werden? (true/false): ");
-		diagonaleRechtsNachLinksAktiv = sc.nextBoolean();
+		int diagonaleRechtsNachLinksAktiv = readIntFromUser(0, 1);
 
 		// Aufruf der Methode zum Zeichnen der Diagonalen
-		if (diagonaleLinksNachRechtsAktiv || diagonaleRechtsNachLinksAktiv) {
-			drawDiagonalOfSquare(diagonaleLinksNachRechtsAktiv, diagonaleRechtsNachLinksAktiv, reihe, spalte,
+		if (diagonaleLinksNachRechtsAktiv == 1 || diagonaleRechtsNachLinksAktiv == 1) {
+			drawDiagonalOfSquare(diagonaleLinksNachRechtsAktiv == 1, diagonaleRechtsNachLinksAktiv == 1, reihe, spalte,
 					seitenlaenge, leds);
 		}
 
@@ -443,14 +446,14 @@ public class ClientApp {
 
 		do {
 			System.out.println("Das Rechtecks muss mindestens 3 mal 3 LEDs gross sein");
-			System.out.println("Top Left X Koordinate des Rechtecks eingeben: \n X: ");
+			System.out.print("Top Left X Koordinate des Rechtecks eingeben: \n X: ");
 			topleftX = sc.nextInt();
-			System.out.println("Top Left Y Koordinate des Rechtecks eingeben: \n Y: ");
+			System.out.print("Top Left Y Koordinate des Rechtecks eingeben: \n Y: ");
 			topleftY = sc.nextInt();
 
-			System.out.println("Bottom Right X Koordinate des Rechtecks eingeben: \n X: ");
+			System.out.print("Bottom Right X Koordinate des Rechtecks eingeben: \n X: ");
 			bottomRightX = sc.nextInt();
-			System.out.println("Bottom Right Y Koordinate des Rechtecks eingeben: \n Y: ");
+			System.out.print("Bottom Right Y Koordinate des Rechtecks eingeben: \n Y: ");
 			bottomRightY = sc.nextInt();
 
 		} while ((bottomRightX - topleftX) < 2 || (bottomRightY - topleftY) < 2);
@@ -514,7 +517,7 @@ public class ClientApp {
 		int triangleHight = 0;
 
 		do {
-			System.out.println("Hoehe des Dreiecks eingegen mindestens 2, maximal 16");
+			System.out.println("Hoehe des Dreiecks eingegen mindestens 2, maximal " + (board.MAX_ROWS / 2));
 			System.out.print(" Hoehe: ");
 			triangleHight = sc.nextInt();
 
@@ -531,11 +534,6 @@ public class ClientApp {
 		int halfbaseLine = (triangleHight - 1);
 		for (int y = 0; y < triangleHight; y++) {
 			for (int x = 0; x < board.MAX_ROWS; x++) {
-				// Rand des Dreiecks zeichenen
-				// if((baseLine-y) == x || (baseLine+y) == x) {
-				// leds[y][x].turnOn();
-				// }
-				// Das Dreieck zeichnen
 				if (x >= (halfbaseLine - y) && x <= (halfbaseLine + y)) {
 					leds[y][x].turnOn();
 				}
@@ -569,8 +567,10 @@ public class ClientApp {
 				// Dreieck zeichnen
 				for (int y = 0; y < reihen; y++) {
 					for (int x = 0; x < 2 * y + 1; x++) {
-						int ledX = x + versch + (reihen - y - 1); // Berechne die X-Position für das LED
-						if (ledX < board.LEDS_PER_ROW) { // Überprüfe die Grenze des Boards
+						// Berechne die X-Position für das LED
+						int ledX = x + versch + (reihen - y - 1);
+						// Ueberprüfe ob die Grenze des Boards ueberschritten ist
+						if (ledX < board.LEDS_PER_ROW) {
 							leds[y][ledX].turnOn();
 						}
 					}
@@ -578,19 +578,22 @@ public class ClientApp {
 
 				// Bewegungsrichtung wechseln
 				if (moveToRight) {
-					if (versch < maxVerschiebung - 1) { // Erreiche die max Verschiebung nicht, um Platz für das letzte
-														// LED zu lassen
+					// Erreiche die max Verschiebung nicht, um Platz für das letzte LED zu lassen
+					if (versch < maxVerschiebung - 1) {
 						versch++;
 					} else {
-						moveToRight = false; // Wechsle die Richtung
+						// Wechsle die Richtung
+						moveToRight = false;
 					}
 				} else {
 					if (versch >= 0) {
 						versch--;
 					} else {
-						moveToRight = true; // Wechsle die Richtung am Anfang
+						// Wechsle die Richtung am Anfang
+						moveToRight = true;
 					}
 				}
+
 				// Fortsetzen, solange das Dreieck nicht wieder am Anfang
 			} while (versch >= 0 || moveToRight);
 		}
@@ -604,8 +607,6 @@ public class ClientApp {
 		int reihen = 1;
 		board.add(reihen);
 
-		// Variable für die Zyklen
-
 		// zwei Dimensionales LED Array
 		Led leds[][] = board.getAllLeds();
 
@@ -616,15 +617,15 @@ public class ClientApp {
 			}
 		}
 
-		// LED in 8er Reihen unterteilen von rechts nach links
-		for (int i = 31; i >= 0; i--) {
-			if (i >= 24) {
+		// LED in 8er Bereiche unterteilen von rechts nach links
+		for (int i = board.MAX_ROWS - 1; i >= 0; i--) {
+			if (i >= board.MAX_ROWS - 8) {
 				leds[0][i] = board.replace(leds[0][i], LedColor.GREEN);
 				leds[0][i].turnOn();
-			} else if (i >= 16) {
+			} else if (i >= board.MAX_ROWS - 16) {
 				leds[0][i] = board.replace(leds[0][i], LedColor.RED);
 				leds[0][i].turnOn();
-			} else if (i >= 8) {
+			} else if (i >= board.MAX_ROWS - 24) {
 				leds[0][i] = board.replace(leds[0][i], LedColor.BLUE);
 				leds[0][i].turnOn();
 			} else {
@@ -632,41 +633,41 @@ public class ClientApp {
 				leds[0][i].turnOn();
 			}
 		}
-		
+
 		// Zwei Sekunden anhlten
 		board.pauseExecution(2000);
 
-		
 		// 3 Mal durchfuehren
-		for (int z = 0; z < 3; z++) { 
+		for (int z = 0; z < 3; z++) {
 			// Ein Durchlauf fuer jede LED in der Reihe
-			for (int durchlauf = 0; durchlauf < 32; durchlauf++) { 
-				//Jedes Led wird angefasst 
+			for (int durchlauf = 0; durchlauf < 32; durchlauf++) {
+				// Jedes Led wird angefasst
 				for (int i = 0; i < 31; i++) {
-					//Jedes Achte mal wird der uebertrag vollzogen
+					// Jedes Achte mal wird der uebertrag vollzogen
+
 					if (i == 7) {
 						// Die Farbe der letzten LED speichern, um sie am Anfang zu setzen
 						LedColor farbeDerLetztenLED = leds[0][BoardService.LEDS_PER_ROW - 1].getColor();
 						// Die gespeicherte Farbe der letzten LED an den Anfang setzen
 						leds[0][0] = board.replace(leds[0][0], farbeDerLetztenLED);
 					}
-					
-					//Wenn die aktuelle LED nicht die gleiche Farbe wie die nachfolgenden LED 
+
+					// Wenn die aktuelle LED nicht die gleiche Farbe wie die nachfolgenden LED
 					if (leds[0][i].getColor() != leds[0][i + 1].getColor()) {
-						//Farbe der aktuellen LED nehmen und nachfolgeden LED dem entsprechend einfaerben
+						// Farbe der aktuellen LED nehmen und nachfolgeden LED dem entsprechend
+						// einfaerben
 						leds[0][i + 1] = board.replace(leds[0][i + 1], leds[0][i].getColor());
-						//naechste LED ueberspringen
+						// naechste LED ueberspringen
 						i++;
 					}
 				}
 
-				// Nach jeder Verschiebung kurz warten, um die Animation sichtbar zu machen
-				board.pauseExecution(100); // Wartezeit von 100 Millisekunden
 			}
 		}
 
 	}
 
+	// 10
 	public static void countColors(BoardService board) {
 		// Maximale Anzahl Reihen hinzufuegen
 		board.add(board.MAX_ROWS, LedColor.RANDOM);
@@ -689,6 +690,7 @@ public class ClientApp {
 		int yellowAnz = 0;
 		int redAnz = 0;
 
+		// zaehlen wie viel von welcher Farbe
 		for (int x = 0; x < board.MAX_ROWS; x++) {
 			for (int y = 0; y < board.MAX_ROWS; y++) {
 				if (leds[y][x].getColor() == LedColor.BLUE) {
@@ -739,14 +741,14 @@ public class ClientApp {
 		int yellowZeile = 0;
 		int redAnz = 0;
 		int redZeile = 0;
+		for (int y = 0; y < board.MAX_ROWS; y++) {
 
-		for (int x = 0; x < board.MAX_ROWS; x++) {
 			int tempBlueAnz = 0;
 			int tempGreenAnz = 0;
 			int tempYellowAnz = 0;
 			int tempRedAnz = 0;
 
-			for (int y = 0; y < board.MAX_ROWS; y++) {
+			for (int x = 0; x < board.MAX_ROWS; x++) {
 				if (leds[y][x].getColor() == LedColor.BLUE) {
 					tempBlueAnz++;
 				}
@@ -760,23 +762,24 @@ public class ClientApp {
 					tempRedAnz++;
 				}
 			}
-			if (blueAnz < tempBlueAnz) {
+			if (blueAnz <= tempBlueAnz) {
 				blueAnz = tempBlueAnz;
-				blueZeile = x;
+				blueZeile = y;
 			}
-			if (greenAnz < tempGreenAnz) {
+			if (greenAnz <= tempGreenAnz) {
 				greenAnz = tempGreenAnz;
-				greenZeile = x;
+				greenZeile = y;
 			}
-			if (yellowAnz < tempYellowAnz) {
+			if (yellowAnz <= tempYellowAnz) {
 				yellowAnz = tempYellowAnz;
-				yellowZeile = x;
+				yellowZeile = y;
 			}
-			if (redAnz < tempRedAnz) {
+			if (redAnz <= tempRedAnz) {
 				redAnz = tempRedAnz;
-				redZeile = x;
+				redZeile = y;
 			}
 		}
+		System.out.println("Hinweis für die Nicht Programierer: Die Zeilenzaehlung beginnt bei 0 :-)");
 		System.out.println();
 		System.out.println(" Led Farbe: Blau \n Zeile mit am meisten blauen Leds: " + blueZeile
 				+ "\n Anzahl Leds in dieser Zeile: " + blueAnz);
@@ -795,18 +798,27 @@ public class ClientApp {
 
 	public static void main(String[] args) {
 		BoardService board = new BoardService();
-
-		 //ledsOnOff(board);
-		 //switchEvenOdd(board);
-		 //switchRandom(board);
-		 //showBinary(board);
-		 //showBorder(board);
-		 //showSquare(board);
-		 //showRectangle(board);
-		 //showTriangle(board, 3);
-		 //createRunningLight(board);
-		 //countColors(board);
-		 countColorsExt(board);
+		// 1
+		// ledsOnOff(board);
+		// 2
+		// switchEvenOdd(board);
+		// 3
+		// switchRandom(board);
+		// 4
+		// showBinary(board);
+		// 5
+		// showBorder(board);
+		// 6
+		// showSquare(board);
+		// 7
+		 showRectangle(board);
+		// 8
+		// showTriangle(board, 3); // 3 ist die Anzahl Movement wiederholungen
+		// 9
+		// createRunningLight(board);
+		// 10
+		// countColors(board);
+		// countColorsExt(board);
 
 	}
 
