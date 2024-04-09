@@ -346,8 +346,6 @@ public class ClientApp {
 	// 6
 	public static void showSquare(BoardService board) {
 
-		// Scanner erstellen
-		Scanner sc = new Scanner(System.in);
 
 		// 6.1
 		// Maximale Anzahl von LED Reihen
@@ -370,9 +368,9 @@ public class ClientApp {
 		int seitenlaenge = 0;
 		do {
 			System.out.println("Bitte eine Ganzzahl fuer die Seitenlaenge eingeben: ");
-			seitenlaenge = sc.nextInt();
+			seitenlaenge = readIntFromUser(0, BoardService.MAX_ROWS);
 			if (seitenlaenge + reihe > BoardService.MAX_ROWS || seitenlaenge + spalte > BoardService.LEDS_PER_ROW) {
-				System.out.println("Bitte die maximale Hoehe und Breite des Quadreates beachten!");
+				System.out.println("Bitte die maximale Hoehe und Breite des Quadreates beachten! \n");
 			}
 		} while (seitenlaenge + reihe > BoardService.MAX_ROWS || seitenlaenge + spalte > BoardService.LEDS_PER_ROW);
 		seitenlaenge--;
@@ -389,11 +387,11 @@ public class ClientApp {
 		// 6.2
 		// Abfrage, ob Diagonale gezeichnet werden soll
 
-		System.out.print(
-				"Sollen die Diagonalen des Quadrates von links nach rechts auch gezeichnet werden? (true/false): ");
+		System.out.println(
+				"Sollen die Diagonalen des Quadrates von links nach rechts auch gezeichnet werden? (1/0)");
 		int diagonaleLinksNachRechtsAktiv = readIntFromUser(0, 1);
-		System.out.print(
-				"Sollen die Diagonalen des Quadrates von rechts nach links auch gezeichnet werden? (true/false): ");
+		System.out.println(
+				"Sollen die Diagonalen des Quadrates von rechts nach links auch gezeichnet werden? (1/0)");
 		int diagonaleRechtsNachLinksAktiv = readIntFromUser(0, 1);
 
 		// Aufruf der Methode zum Zeichnen der Diagonalen
@@ -433,9 +431,7 @@ public class ClientApp {
 
 	// 7
 	public static void showRectangle(BoardService board) {
-		// Scanner erstellen
-		Scanner sc = new Scanner(System.in);
-
+		
 		// 7.1 Maximale Anzahl Reihen hinzufügen
 		board.add(board.MAX_ROWS);
 
@@ -446,15 +442,15 @@ public class ClientApp {
 
 		do {
 			System.out.println("Das Rechtecks muss mindestens 3 mal 3 LEDs gross sein");
-			System.out.print("Top Left X Koordinate des Rechtecks eingeben: \n X: ");
-			topleftX = sc.nextInt();
-			System.out.print("Top Left Y Koordinate des Rechtecks eingeben: \n Y: ");
-			topleftY = sc.nextInt();
+			System.out.println("Top Left X Koordinate des Rechtecks eingeben! ");
+			topleftX = readIntFromUser(0, board.MAX_ROWS-1);
+			System.out.println("Top Left Y Koordinate des Rechtecks eingeben! ");
+			topleftY = readIntFromUser(0, board.MAX_ROWS-1);
 
-			System.out.print("Bottom Right X Koordinate des Rechtecks eingeben: \n X: ");
-			bottomRightX = sc.nextInt();
-			System.out.print("Bottom Right Y Koordinate des Rechtecks eingeben: \n Y: ");
-			bottomRightY = sc.nextInt();
+			System.out.println("\nBottom Right X Koordinate des Rechtecks eingeben! ");
+			bottomRightX = readIntFromUser(0, board.MAX_ROWS-1);
+			System.out.println("Bottom Right Y Koordinate des Rechtecks eingeben! ");
+			bottomRightY = readIntFromUser(0, board.MAX_ROWS-1);
 
 		} while ((bottomRightX - topleftX) < 2 || (bottomRightY - topleftY) < 2);
 
@@ -511,18 +507,9 @@ public class ClientApp {
 
 	// 8.1
 	public static void showTriangle(BoardService board, int wiederholungen) {
-		// Scanner erstellen
-		Scanner sc = new Scanner(System.in);
-
-		int triangleHight = 0;
-
-		do {
-			System.out.println("Hoehe des Dreiecks eingegen mindestens 2, maximal " + (board.MAX_ROWS / 2));
-			System.out.print(" Hoehe: ");
-			triangleHight = sc.nextInt();
-
-		} while (triangleHight < 2 || triangleHight > board.MAX_ROWS / 2);
-
+		
+		int triangleHight = readIntFromUser(2, board.MAX_ROWS / 2);
+		
 		// Anzahl Reihen gemaess Hoehe hinzufügen
 		board.add(triangleHight);
 
@@ -811,7 +798,7 @@ public class ClientApp {
 		// 6
 		// showSquare(board);
 		// 7
-		 showRectangle(board);
+		// showRectangle(board);
 		// 8
 		// showTriangle(board, 3); // 3 ist die Anzahl Movement wiederholungen
 		// 9
